@@ -10,7 +10,6 @@ RUN \
 
 ADD http://boot.ipxe.org/undionly.kpxe /srv/tftp
 ADD http://boot.ipxe.org/ipxe.efi /srv/tftp
-COPY boot.ipxe /srv/tftp
 
 EXPOSE 69/udp
 

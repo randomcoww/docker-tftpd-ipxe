@@ -1,0 +1,11 @@
+#!ipxe
+
+set image-base-url http://mirror.rackspace.com/debian/dists/stretch/main/installer-amd64/current/images/netboot/debian-installer/amd64/
+set preseed-url https://raw.githubusercontent.com/randomcoww/ipxe-boot/master/preseed.cfg
+
+kernel ${image-base-url}/linux preseed/url=${preseed-url} --
+initrd ${image-base-url}/initrd.gz
+
+boot ||
+echo Boot failed. Dropping to shell.
+shell

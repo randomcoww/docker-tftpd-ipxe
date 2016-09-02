@@ -9,6 +9,7 @@ RUN \
   rm -rf /var/lib/apt/lists/* /tmp/*
 
 ADD http://boot.ipxe.org/ipxe.pxe /srv/tftp
+RUN chmod -R o+r /srv/tftp 
 
 EXPOSE 69/udp
 

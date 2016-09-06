@@ -8,7 +8,7 @@ RUN \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/* /tmp/*
 
-ADD http://boot.ipxe.org/ipxe.pxe /srv/tftp
+ADD http://boot.ipxe.org/ipxe.pxe /srv/tftp/pxelinux.0
 RUN chmod -R o+r /srv/tftp 
 
 EXPOSE 69/udp

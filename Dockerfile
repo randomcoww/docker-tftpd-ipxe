@@ -3,6 +3,7 @@ FROM alpine:latest
 ## does not work on dockerhub yet
 # ADD --chown=nobody http://boot.ipxe.org/ipxe.efi /tftp
 ADD http://boot.ipxe.org/ipxe.efi /tftp
+ADD http://boot.ipxe.org/undionly.kpxe /tftp
 
 RUN set -x \
   \

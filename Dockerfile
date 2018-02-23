@@ -1,14 +1,16 @@
 FROM alpine:latest
 
-## does not work on dockerhub yet
-# ADD --chown=nobody http://boot.ipxe.org/ipxe.efi /tftp/
-ADD http://boot.ipxe.org/ipxe.efi /tftp/
-ADD http://boot.ipxe.org/undionly.kpxe /tftp/
+ENV TFTP_PATH /var/tftp
 
 RUN set -x \
   \
   && apk add --no-cache tftp-hpa \
-  && chown -R nobody:nobody /tftp
+  \
+  && mkdir $TFTP_PATH \
+  && wget -O $TFTP_PATH/ipxe.efi http://boot.ipxe.org/ipxe.efi \
+  && wget -O $TFTP_PATH/undionly.kpxe http://boot.ipxe.org/undionly.kpxe \
+  && chown -R nobody:nobody $TFTP_PATH \
+  && chmod +r $TFTP_PATH/*
 
-ENTRYPOINT ["in.tftpd"]
-CMD ["--foreground", "--user", "nobody", "--address", "0.0.0.0:69", "--verbose", "--secure", "/tftp"]
+COPY entrypoint.sh /
+ENTRYPOINT ["/entrypoint.sh"]

@@ -1,14 +1,14 @@
 FROM alpine:latest
 
-ENV TFTP_PATH /var/tftp
+ENV TFTP_PATH /var/tftpboot
+
+COPY ipxe-x86_64.efi $TFTP_PATH/ipxe.efi
+COPY undionly.kpxe $TFTP_PATH/undionly.kpxe
 
 RUN set -x \
   \
   && apk add --no-cache tftp-hpa \
   \
-  && mkdir $TFTP_PATH \
-  && wget -O $TFTP_PATH/ipxe.efi http://boot.ipxe.org/ipxe.efi \
-  && wget -O $TFTP_PATH/undionly.kpxe http://boot.ipxe.org/undionly.kpxe \
   && chown -R nobody:nobody $TFTP_PATH \
   && chmod +r $TFTP_PATH/*
 

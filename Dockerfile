@@ -21,8 +21,7 @@ RUN set -x \
   \
   && make -j "$(getconf _NPROCESSORS_ONLN)" \
     bin-x86_64-efi/ipxe.efi \
-    bin/undionly.kpxe \
-    bin/ipxe.lkrn
+    bin/undionly.kpxe
 
 
 FROM alpine:latest
@@ -31,7 +30,6 @@ ENV TFTP_PATH /var/tftpboot
 
 COPY --from=BUILD /usr/src/ipxe/src/bin-x86_64-efi/ipxe.efi $TFTP_PATH/ipxe.efi
 COPY --from=BUILD /usr/src/ipxe/src/bin/undionly.kpxe       $TFTP_PATH/undionly.kpxe
-COPY --from=BUILD /usr/src/ipxe/src/bin/ipxe.lkrn           $TFTP_PATH/ipxe.lkrn
 
 RUN set -x \
   \

@@ -1,4 +1,4 @@
-FROM alpine:latest as BUILD
+FROM alpine:edge as BUILD
 
 RUN set -x \
   \
@@ -24,7 +24,7 @@ RUN set -x \
     bin/undionly.kpxe
 
 
-FROM alpine:latest
+FROM alpine:edge
 
 ENV TFTP_PATH /var/tftpboot
 

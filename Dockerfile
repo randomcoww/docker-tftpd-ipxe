@@ -38,5 +38,5 @@ RUN set -x \
   && chown -R nobody:nobody $TFTP_PATH \
   && chmod +r $TFTP_PATH/*
 
-COPY entrypoint.sh /
-ENTRYPOINT ["/entrypoint.sh"]
+COPY docker-entrypoint.sh /
+ENTRYPOINT ["/docker-entrypoint.sh"]

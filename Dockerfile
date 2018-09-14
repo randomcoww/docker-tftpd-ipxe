@@ -1,40 +1,14 @@
-FROM alpine:edge as BUILD
-
-RUN set -x \
-  \
-  && apk add --no-cache \
-    g++ \
-    xz-dev \
-    make \
-    perl \
-    bash \
-    cdrkit \
-    git \
-  \
-  && mkdir -p /usr/src \
-  && git clone https://git.ipxe.org/ipxe.git /usr/src/ipxe
-
-WORKDIR /usr/src/ipxe/src
-COPY config/ config/local/
-
-RUN set -x \
-  \
-  && make -j "$(getconf _NPROCESSORS_ONLN)" \
-    bin-x86_64-efi/ipxe.efi \
-    bin/undionly.kpxe
-
-
 FROM alpine:edge
 
-ENV TFTP_PATH /var/tftpboot
-
-COPY --from=BUILD /usr/src/ipxe/src/bin-x86_64-efi/ipxe.efi $TFTP_PATH/ipxe.efi
-COPY --from=BUILD /usr/src/ipxe/src/bin/undionly.kpxe       $TFTP_PATH/undionly.kpxe
+ENV TFTP_PATH /var/tftp
 
 RUN set -x \
   \
   && apk add --no-cache tftp-hpa \
   \
+  && mkdir $TFTP_PATH \
+  && wget -O $TFTP_PATH/ipxe.efi http://boot.ipxe.org/ipxe.efi \
+  && wget -O $TFTP_PATH/undionly.kpxe http://boot.ipxe.org/undionly.kpxe \
   && chown -R nobody:nobody $TFTP_PATH \
   && chmod +r $TFTP_PATH/*
 

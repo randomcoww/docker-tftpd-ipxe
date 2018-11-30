@@ -11,10 +11,9 @@ RUN set -x \
     cdrkit \
     git \
   \
-  && mkdir -p /usr/src \
-  && git clone https://git.ipxe.org/ipxe.git /usr/src/ipxe
+  && git clone https://git.ipxe.org/ipxe.git /ipxe
 
-WORKDIR /usr/src/ipxe/src
+WORKDIR /ipxe/src
 COPY config/ config/local/
 
 RUN set -x \
@@ -23,20 +22,19 @@ RUN set -x \
     bin-x86_64-efi/ipxe.efi \
     bin/undionly.kpxe
 
-
 FROM alpine:edge
 
 ENV TFTP_PATH /var/tftpboot
 
-COPY --from=BUILD /usr/src/ipxe/src/bin-x86_64-efi/ipxe.efi $TFTP_PATH/ipxe.efi
-COPY --from=BUILD /usr/src/ipxe/src/bin/undionly.kpxe       $TFTP_PATH/undionly.kpxe
+COPY --from=BUILD --chown=nobody:nogroup \
+  /ipxe/src/bin-x86_64-efi/ipxe.efi $TFTP_PATH/ipxe.efi
+COPY --from=BUILD --chown=nobody:nogroup \
+  /ipxe/src/bin/undionly.kpxe       $TFTP_PATH/undionly.kpxe
 
 RUN set -x \
   \
-  && apk add --no-cache tftp-hpa \
-  \
-  && chown -R nobody:nobody $TFTP_PATH \
-  && chmod +r $TFTP_PATH/*
+  && apk add --no-cache tftp-hpa
+
 
 COPY docker-entrypoint.sh /
 ENTRYPOINT ["/docker-entrypoint.sh"]

@@ -24,17 +24,15 @@ RUN set -x \
 
 FROM alpine:edge
 
-ENV TFTP_PATH /var/tftpboot
-
+WORKDIR /var/tftpboot
 COPY --from=BUILD --chown=nobody:nogroup \
-  /ipxe/src/bin-x86_64-efi/ipxe.efi $TFTP_PATH/ipxe.efi
+  /ipxe/src/bin-x86_64-efi/ipxe.efi .
 COPY --from=BUILD --chown=nobody:nogroup \
-  /ipxe/src/bin/undionly.kpxe       $TFTP_PATH/undionly.kpxe
+  /ipxe/src/bin/undionly.kpxe .
 
 RUN set -x \
   \
-  && apk add --no-cache tftp-hpa
+  && apk add --no-cache \
+    tftp-hpa
 
-
-COPY docker-entrypoint.sh /
-ENTRYPOINT ["/docker-entrypoint.sh"]
+ENTRYPOINT [ "in.tftpd", "--foreground", "--user", "nobody", "--secure", "/var/tftpboot" ]

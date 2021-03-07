@@ -10,6 +10,7 @@ RUN set -x \
     bash \
     cdrkit \
     git \
+    ca-certificates \
   \
   && git clone https://git.ipxe.org/ipxe.git /ipxe
 

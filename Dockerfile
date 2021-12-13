@@ -1,5 +1,7 @@
 FROM alpine:edge as BUILD
 
+ARG VERSION
+
 RUN set -x \
   \
   && apk add --no-cache \
@@ -12,7 +14,7 @@ RUN set -x \
     git \
     ca-certificates \
   \
-  && git clone https://git.ipxe.org/ipxe.git /ipxe
+  && git clone -b $VERSION https://github.com/ipxe/ipxe /ipxe
 
 WORKDIR /ipxe/src
 COPY config/ config/local/

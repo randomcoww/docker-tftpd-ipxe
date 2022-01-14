@@ -22,17 +22,17 @@ Menu
 ### Image build
 
 ```
-mkdir -p build
-export TMPDIR=$(pwd)/build
-
 VERSION=master
+TAG=ghcr.io/randomcoww/tftpd-ipxe:$VERSION
 
-podman build \
+buildah build \
   --build-arg VERSION=$VERSION \
   -f Dockerfile \
-  -t ghcr.io/randomcoww/tftpd-ipxe:$VERSION
-```
+  -t localtemp
 
-```
-podman push ghcr.io/randomcoww/tftpd-ipxe:$VERSION
+container=$(buildah from localtemp)
+buildah run --net=none $container -- rm /etc/hosts
+buildah commit $container $TAG
+
+buildah push $TAG
 ```
